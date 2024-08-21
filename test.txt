@@ -1,7 +1,46 @@
-Test 1 Simple Text 
-second 
-third
-fourth
-fith
-sixt
-semmel
+import tkinter as tk
+from tkinter import messagebox
+from PIL import Image, ImageTk
+import os
+
+# Funktion zum Laden und Anzeigen von JPEG-Bildern
+class ImageGridViewer:
+    def __init__(self, root, image_paths):
+        self.root = root
+        self.image_paths = image_paths
+
+        # Gitter erstellen
+        self.create_image_grid()
+
+    def create_image_grid(self):
+        for index, image_path in enumerate(self.image_paths):
+            # Bild laden und skalieren
+            img = Image.open(image_path)
+            img = img.resize((300, 300), 1)  # Bild skalieren
+            tk_image = ImageTk.PhotoImage(img)
+
+            # Label für das Bild
+            image_label = tk.Label(self.root, image=tk_image)
+            image_label.image = tk_image  # Referenz speichern, um Garbage Collection zu vermeiden
+            image_label.grid(row=index // 5, column=index % 5)  # 5 Bilder pro Reihe
+
+            # Ereignisbindung für Mausklick
+            image_label.bind("<Button-1>", lambda event, name=os.path.basename(image_path): self.show_image_name(name))
+
+    def show_image_name(self, image_name):
+        # Bildnamen anzeigen
+        messagebox.showinfo("Bildname", image_name)
+
+# Hauptprogramm
+if __name__ == "__main__":
+    # Liste der JPEG-Bilder
+    image_folder = "assets/"  # Ersetze dies durch den tatsächlichen Ordner
+    image_paths = [os.path.join(image_folder, f) for f in os.listdir(image_folder) if f.endswith('.jpg')]
+
+    # Tkinter Fenster erstellen
+    root = tk.Tk()
+    root.title("JPEG Bildanzeige in Gitterform")
+
+    viewer = ImageGridViewer(root, image_paths)
+
+    root.mainloop()
