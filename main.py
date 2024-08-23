@@ -28,7 +28,7 @@ class ImageGridViewer:
             image_label.bind("<Button-1>", lambda event, name=os.path.basename(image_path): self.show_image_name(name))
 
     def show_image_name(self, image_name):
-        # Bildnamen anzeigen
+        # Bildnamen und Mausposition anzeigen    
         messagebox.showinfo("Bildname", image_name)
 
 # Hauptprogramm
